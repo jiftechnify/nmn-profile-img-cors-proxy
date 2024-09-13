@@ -2,7 +2,33 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { cors } from "hono/cors";
 import { cache } from "hono/cache";
-import sharp from "sharp";
+import { logger } from "hono/logger";
+import {
+  ImageMagick,
+  IMagickImage,
+  initialize,
+  MagickFormat,
+} from "https://deno.land/x/imagemagick_deno@0.0.27/mod.ts";
+
+const PICTURE_MAX_SIZE = 256;
+function shouldResize(w: number, h: number): boolean {
+  return w > PICTURE_MAX_SIZE || h > PICTURE_MAX_SIZE;
+}
+
+function fitPicture(w: number, h: number): { w: number; h: number } {
+  if (w > h) {
+    const newW = PICTURE_MAX_SIZE;
+    const newH = Math.floor(h * (newW / w));
+    return { w: newW, h: newH };
+  } else {
+    const newH = PICTURE_MAX_SIZE;
+    const newW = Math.floor(w * (newH / h));
+    return { w: newW, h: newH };
+  }
+}
+
+// initialize ImageMagick
+await initialize();
 
 const app = new Hono();
 
@@ -22,10 +48,16 @@ app.get("/", async (ctx) => {
   }
 
   try {
-    const srcBuf = await remoteResp.arrayBuffer();
-    const resized = await sharp(srcBuf).resize({ width: 256, fit: "contain" })
-      .webp()
-      .toBuffer();
+    const src = new Uint8Array(await remoteResp.arrayBuffer());
+    const resized = await new Promise<Uint8Array>((resolve) => {
+      ImageMagick.read(src, (img: IMagickImage) => {
+        if (shouldResize(img.width, img.height)) {
+          const { w, h } = fitPicture(img.width, img.height);
+          img.resize(w, h);
+        }
+        img.write(MagickFormat.Webp, (data: Uint8Array) => resolve(data));
+      });
+    });
     return ctx.body(resized);
   } catch (err) {
     console.error(`failed to resize image: ${err}`);
@@ -33,6 +65,7 @@ app.get("/", async (ctx) => {
   }
 });
 
+app.use(logger());
 app.get("*", cors({ origin: "*", allowMethods: ["GET"] }));
 app.get("*", cache({ cacheName: "cache" }));
 

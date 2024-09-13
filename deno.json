@@ -4,6 +4,6 @@
     "hono/http-exception": "npm:hono@^4.6.1/http-exception",
     "hono/cors": "npm:hono@^4.6.1/cors",
     "hono/cache": "npm:hono@^4.6.1/cache",
-    "sharp": "npm:sharp@^0.33.5"
+    "hono/logger": "npm:hono@^4.6.1/logger"
   }
 }
