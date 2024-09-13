@@ -1,14 +1,14 @@
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { cors } from "hono/cors";
-import { cache } from "hono/cache";
-import { logger } from "hono/logger";
+import { Hono } from "@hono/hono";
+import { HTTPException } from "@hono/hono/http-exception";
+import { cors } from "@hono/hono/cors";
+import { cache } from "@hono/hono/cache";
 import {
   ImageMagick,
   IMagickImage,
   initialize,
   MagickFormat,
-} from "https://deno.land/x/imagemagick_deno@0.0.27/mod.ts";
+} from "imagemagick";
+import { logger } from "./logger.ts";
 
 const PICTURE_MAX_SIZE = 256;
 function shouldResize(w: number, h: number): boolean {
@@ -31,6 +31,10 @@ function fitPicture(w: number, h: number): { w: number; h: number } {
 await initialize();
 
 const app = new Hono();
+
+app.use(logger());
+app.use(cors({ origin: "*", allowMethods: ["GET"] }));
+app.use(cache({ cacheName: "cache", wait: true }));
 
 app.get("/", async (ctx) => {
   const url = ctx.req.query("u");
@@ -65,8 +69,6 @@ app.get("/", async (ctx) => {
   }
 });
 
-app.use(logger());
-app.get("*", cors({ origin: "*", allowMethods: ["GET"] }));
-app.get("*", cache({ cacheName: "cache" }));
+
 
 Deno.serve(app.fetch);

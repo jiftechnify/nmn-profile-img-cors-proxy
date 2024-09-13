@@ -1,9 +1,6 @@
 {
   "imports": {
-    "hono": "npm:hono@^4.6.1",
-    "hono/http-exception": "npm:hono@^4.6.1/http-exception",
-    "hono/cors": "npm:hono@^4.6.1/cors",
-    "hono/cache": "npm:hono@^4.6.1/cache",
-    "hono/logger": "npm:hono@^4.6.1/logger"
+    "@hono/hono": "jsr:@hono/hono@^4.6.1",
+    "imagemagick": "https://deno.land/x/imagemagick_deno@0.0.27/mod.ts"
   }
 }

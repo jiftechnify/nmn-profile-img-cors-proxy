@@ -2,11 +2,17 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:hono@^4.6.1": "npm:hono@4.6.1"
+      "jsr:@hono/hono@^4.6.1": "jsr:@hono/hono@4.6.1",
+      "npm:@types/node": "npm:@types/node@18.16.19"
+    },
+    "jsr": {
+      "@hono/hono@4.6.1": {
+        "integrity": "993704e3a2fa8e965c2fa46c57fc038bd277e781a982d3bf0fb278f6671b195f"
+      }
     },
     "npm": {
-      "hono@4.6.1": {
-        "integrity": "sha512-6NGwvttY1+HAFii08VYiEKI6ETPAFbpLntpm2M/MogEsAFWdZV74UNT+2M4bmqX90cIQhjlpBSP+tO+CfB0uww==",
+      "@types/node@18.16.19": {
+        "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
         "dependencies": {}
       }
     }
@@ -114,7 +120,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:hono@^4.6.1"
+      "jsr:@hono/hono@^4.6.1"
     ]
   }
 }
