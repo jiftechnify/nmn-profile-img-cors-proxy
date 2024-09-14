@@ -34,7 +34,9 @@ const app = new Hono();
 
 app.use(logger());
 app.use(cors({ origin: "*", allowMethods: ["GET"] }));
-app.use(cache({ cacheName: "cache", wait: true }));
+app.use(
+  cache({ cacheName: "cache", wait: true, cacheControl: "public, max-age=60" }),
+);
 
 app.get("/", async (ctx) => {
   const url = ctx.req.query("u");
