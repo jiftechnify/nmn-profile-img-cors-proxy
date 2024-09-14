@@ -42,7 +42,7 @@ app.get("/", async (ctx) => {
     console.error("missing query param 'u'");
     throw new HTTPException(400);
   }
-
+  console.log("fetching image from remote:", url);
   const remoteResp = await fetch(url);
   if (!remoteResp.ok) {
     console.log(
@@ -52,6 +52,7 @@ app.get("/", async (ctx) => {
   }
 
   try {
+    console.log("resizing & reformatting image:", url);
     const src = new Uint8Array(await remoteResp.arrayBuffer());
     const resized = await new Promise<Uint8Array>((resolve) => {
       ImageMagick.read(src, (img: IMagickImage) => {
