@@ -47,7 +47,7 @@ app.get("/", async (ctx) => {
   console.log("fetching image from remote:", url);
   const remoteResp = await fetch(url);
   if (!remoteResp.ok) {
-    console.log(
+    console.error(
       `failed to fetch from remote (url: ${url}): ${remoteResp.status}`,
     );
     throw new HTTPException(400);
@@ -77,7 +77,5 @@ app.get("/", async (ctx) => {
     throw new HTTPException(500);
   }
 });
-
-
 
 Deno.serve(app.fetch);
