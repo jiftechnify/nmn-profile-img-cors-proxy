@@ -63,6 +63,7 @@ app.get("/", async (ctx) => {
         img.write(MagickFormat.Webp, (data: Uint8Array) => resolve(data));
       });
     });
+    ctx.header("Content-Type", "image/webp");
     return ctx.body(resized);
   } catch (err) {
     console.error(`failed to resize image: ${err}`);
