@@ -52,6 +52,11 @@ app.get("/", async (ctx) => {
     );
     throw new HTTPException(400);
   }
+  const remoteMime = remoteResp.headers.get("Content-Type");
+  if (remoteMime !== null && !remoteMime.startsWith("image")) {
+    console.error(`not an image (${remoteMime}):`, url);
+    throw new HTTPException(400);
+  }
 
   try {
     console.log("resizing & reformatting image:", url);
